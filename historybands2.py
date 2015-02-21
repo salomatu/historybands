@@ -28,11 +28,13 @@ def main():
 
     dtime = time.time() - last_time
     dmins = int(round(dtime / 60.0))
+    sourcedtime = time.time() - os.stat(infile).st_mtime
     font = ImageFont.load_default()
 
-    newcol = Image.open(infile).resize((60,45),Image.ANTIALIAS)
     history = shift(history, dmins)
-    history.paste(newcol.crop((minute,0,minute+1,45)),(xsize,0))
+    if sourcedtime < 60: 
+        newcol = Image.open(infile).resize((60,45),Image.ANTIALIAS)
+        history.paste(newcol.crop((minute,0,minute+1,45)),(xsize,0))
 
     draw = ImageDraw.Draw(history)
     draw.line([(xsize,45),(xsize,54)], fill="#000000", width=1)
